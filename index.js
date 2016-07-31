@@ -1,15 +1,20 @@
 const chalk    = require( 'chalk' );
+const tildify  = require( 'tildify' );
 const minimist = require( 'minimist' );
 const Liftoff  = require( 'liftoff' );
 
+const package      = require( './package.json' );
+const exit         = require( './lib/exit' );
 const optionDefine = require( './lib/option-define' );
 const optionUsage  = require( './lib/option-usage' );
-const package      = require( './package.json' );
 
 const argv = minimist( process.argv.slice( 2 ), optionDefine.getMinimistOptionDefine() );
 
 const  cli = new Liftoff( {
-    name: package.name
+    name: 'joke',
+    processTitle: 'joke',
+    moduleName: 'joke-cli',
+    configName: 'jokefile'
 } );
 
 function run() {
@@ -28,17 +33,21 @@ function handleCommandLineArguments(env) {
 
     const sholdBeDebug      = argv.debug;
 
-    const pkg = { name: 'joke', version: package.version };
-
     if ( shouldShowVersion ) {
-        optionUsage.showVersion( pkg );
+        optionUsage.showVersion( package );
 
-        return ;
+        exit( 0 );
     }
 
     if ( shouldShowHelp ) {
-        optionUsage.showHelp( pkg, optionDefine.getOptionDefine() );
+        optionUsage.showHelp( package, optionDefine.getOptionDefine() );
 
-        return ;
+        exit( 0 );
+    }
+
+    if ( !env.configPath ) {
+        console.error( chalk.magenta( 'no jokefile found' ) );
+
+        exit( 1 );
     }
 }
