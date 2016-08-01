@@ -1,3 +1,5 @@
+const path     = require( 'path' );
+
 const chalk    = require( 'chalk' );
 const tildify  = require( 'tildify' );
 const minimist = require( 'minimist' );
@@ -5,6 +7,7 @@ const Liftoff  = require( 'liftoff' );
 
 const package      = require( './package.json' );
 const exit         = require( './lib/exit' );
+const execute      = require( './lib/execute' );
 const optionDefine = require( './lib/option-define' );
 const optionUsage  = require( './lib/option-usage' );
 
@@ -50,4 +53,6 @@ function handleCommandLineArguments(env) {
 
         exit( 1 );
     }
+
+    execute( env, opts );
 }
